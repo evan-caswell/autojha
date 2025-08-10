@@ -9,6 +9,7 @@ async def get_weather_data(coords: dict[str, float], job_date: date) -> dict:
         response = await client.get(url, timeout=15.0)
         response.raise_for_status()
         data = response.json()
+        # Zone must be retrieved to access alerts for the area.
         zone = data["properties"]["forecastZone"].split("/")[-1]
         alerts = await get_alerts(zone, client)
         forecasts = await get_forecast(data["properties"]["forecast"], job_date, client)
@@ -39,6 +40,7 @@ async def get_forecast(
     response = await client.get(url, timeout=15.0)
     response.raise_for_status()
     periods = response.json()["properties"]["periods"]
+    # Only retrieve forecasts for the date listed on the JHA.
     forecasts = [
         period["detailedForecast"]
         for period in periods
