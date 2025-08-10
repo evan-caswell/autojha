@@ -10,8 +10,9 @@ router = APIRouter(prefix="/jha")
 
 @router.post("/generate")
 async def generate_jha(input_data: JobData):
+    # Lat and lon need to be retrieved using the city and state to access the NWS API.
     coords = await get_coords(input_data.job_location)
     weather_data = await get_weather_data(coords, input_data.job_date)
     prompt = jha_prompt(input_data, weather_data)
-    response = await get_gemini_response(prompt)
+    response = get_gemini_response(prompt)
     return response

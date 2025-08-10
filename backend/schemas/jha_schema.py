@@ -14,3 +14,6 @@ class JobData(BaseModel):
     job_location: str
     site_conditions: str
     tasks: list[Task]
+
+
+# Add more classes for validation of output data, not only input to the API backend

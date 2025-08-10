@@ -1,10 +1,6 @@
 import httpx
-import asyncio
-import nest_asyncio
 import pandas as pd
 import streamlit as st
-
-nest_asyncio.apply()
 
 API_URL = "http://localhost:8000/jha/generate"
 
@@ -62,10 +58,12 @@ if not st.session_state.task_df.empty:
     )
 
 
-async def send_request(payload: dict):
-    async with httpx.AsyncClient(timeout=500.0) as client:
-        response = await client.post(API_URL, json=payload)
+# Long timeout as the free tier Gemini can sometimes take awhile to respond.
+def send_request(payload: dict) -> str:
+    with httpx.Client(timeout=500.0) as client:
+        response = client.post(API_URL, json=payload)
         response.raise_for_status()
+        # Newline characters in the response are actually "\" + "n" instead of "\n"
         return response.text.replace("\\n", "\n")
 
 
@@ -74,7 +72,6 @@ if st.button(
     "Generate JHA", disabled=st.session_state.task_df.empty, use_container_width=True
 ):
     with st.spinner("Generating"):
-        loop = asyncio.get_event_loop()
         try:
             payload = {
                 "job_name": job_name,
@@ -83,8 +80,9 @@ if st.button(
                 "site_conditions": jha_conditions,
                 "tasks": st.session_state.task_df.to_dict("records"),
             }
-            result = loop.run_until_complete(send_request(payload))
+            result = send_request(payload)
             st.success("Complete!")
+            # Extra quotations are sent back to the frontend in the response text
             st.markdown(result.strip('"'), unsafe_allow_html=True)
         except Exception as e:
             st.warning(f"Error {e}")

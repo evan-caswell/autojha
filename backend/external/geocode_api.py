@@ -2,6 +2,9 @@ import httpx
 from backend.core.config import get_settings
 
 
+# Geocode should be replaced with a new API service for getting lat and lon.
+# The service appears unreliable as the API key frequently becomes invalid and a new
+# account needs to be made after a certain period of time to obtain a new key.
 async def get_coords(location: str):
     url = "https://geocode.xyz"
     params = {
