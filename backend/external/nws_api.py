@@ -2,22 +2,22 @@ import httpx
 from datetime import date
 
 
-async def get_weather_data(coords: dict[str, float], job_date: date):
+async def get_weather_data(coords: dict[str, float], job_date: date) -> dict:
     url = f"https://api.weather.gov/points/{coords['lat']},{coords['lon']}"
-    async with httpx.AsyncClient() as client:
-        response = await client.get(url)
+    headers = {"User-Agent": "AutoJHA", "Accept": "application/geo+json"}
+    async with httpx.AsyncClient(headers=headers) as client:
+        response = await client.get(url, timeout=15.0)
         response.raise_for_status()
         data = response.json()
         zone = data["properties"]["forecastZone"].split("/")[-1]
         alerts = await get_alerts(zone, client)
         forecasts = await get_forecast(data["properties"]["forecast"], job_date, client)
-        weather_data = {"alerts": alerts, "forecasts": forecasts}
-        return weather_data
+        return {"alerts": alerts, "forecasts": forecasts}
 
 
-async def get_alerts(zone: str, client: httpx.AsyncClient):
+async def get_alerts(zone: str, client: httpx.AsyncClient) -> list[dict]:
     url = f"https://api.weather.gov/alerts/active?zone={zone}"
-    response = await client.get(url)
+    response = await client.get(url, timeout=15.0)
     response.raise_for_status()
     data = response.json()
     features = data["features"]
@@ -33,11 +33,12 @@ async def get_alerts(zone: str, client: httpx.AsyncClient):
     return alerts
 
 
-async def get_forecast(url: str, job_date: date, client: httpx.AsyncClient):
-    response = await client.get(url)
+async def get_forecast(
+    url: str, job_date: date, client: httpx.AsyncClient
+) -> list[str]:
+    response = await client.get(url, timeout=15.0)
     response.raise_for_status()
-    data = response.json()
-    periods = data["properties"]["periods"]
+    periods = response.json()["properties"]["periods"]
     forecasts = [
         period["detailedForecast"]
         for period in periods
