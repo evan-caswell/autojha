@@ -121,7 +121,7 @@ The app will be available at:
 - **Backend:** [FastAPI](https://fastapi.tiangolo.com/)
 - **AI Model:** [Google Gemini API](https://ai.google.dev/)
 - **Weather Data:** [NWS API](https://www.weather.gov/documentation/services-web-api)
-- **Geocoding:** [Geocode.xyz](https://geocode.xyz/) (or alternative)
+- **Geocoding:** [Geocode.xyz](https://geocode.xyz/)
 - **Validation:** [Pydantic](https://docs.pydantic.dev/)
 
 ---
@@ -146,4 +146,4 @@ For major changes, please open an issue first to discuss your ideas.
 ## License
 
 This project is licensed under the MIT License.  
-See the [LICENSE](LICENSE) file for details.
+
