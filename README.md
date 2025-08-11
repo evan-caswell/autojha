@@ -40,7 +40,7 @@ autojha/
 │   └── main.py           # FastAPI application entrypoint
 ├── frontend/
 │   ├── app.py           # Streamlit landing page
-│   ├── generate_jha.py   # JHA creation UI
+│   └── generate_jha.py   # JHA creation UI
 ├── .env.example          # Example environment variables
 ├── requirements.txt      # Python dependencies
 └── README.md             # Project documentation
@@ -79,15 +79,13 @@ cp .env.example .env
 
 ### 5. Run the backend (FastAPI)
 ```bash
-cd backend
-uvicorn main:app --reload --port 8000
+uvicorn backend.main:app --reload --port 8000
 ```
 
 ### 6. Run the frontend (Streamlit)
 Open a new terminal in the project root:
 ```bash
-cd frontend
-streamlit run Home.py --server.port 8501
+streamlit run app.py --server.port 8501
 ```
 
 The app will be available at:
@@ -103,7 +101,6 @@ The app will be available at:
 3. Provide a job location (validated via geocoding).
 4. Click **Generate JHA**.
 5. Review the AI-generated Markdown output.
-6. (Optional) Save the JHA for later reference.
 
 ---
 
