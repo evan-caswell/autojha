@@ -39,9 +39,8 @@ autojha/
 │   ├── utils/            # Prompt templates & helper functions
 │   └── main.py           # FastAPI application entrypoint
 ├── frontend/
-│   ├── Home.py           # Streamlit landing page
+│   ├── app.py           # Streamlit landing page
 │   ├── generate_jha.py   # JHA creation UI
-│   └── view_jha.py       # (Optional) Saved JHA viewing
 ├── .env.example          # Example environment variables
 ├── requirements.txt      # Python dependencies
 └── README.md             # Project documentation
@@ -53,7 +52,7 @@ autojha/
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/<your-username>/autojha.git
+git clone https://github.com/evan-caswell/autojha.git
 cd autojha
 ```
 
@@ -76,7 +75,7 @@ cp .env.example .env
 ```
 **Required keys:**
 - `GEMINI_API_KEY` — API key for Gemini
-- `GEOCODE_API_KEY` — API key for your geocoding provider (if applicable)
+- `GEOCODE_API_KEY` — API key for your geocoding provider
 
 ### 5. Run the backend (FastAPI)
 ```bash
