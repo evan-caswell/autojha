@@ -75,7 +75,7 @@ if st.button(
         try:
             payload = {
                 "job_name": job_name,
-                "job_date": jha_date.isoformat(),
+                "job_date": jha_date.strftime("%Y-%m-%d"),
                 "job_location": jha_location,
                 "site_conditions": jha_conditions,
                 "tasks": st.session_state.task_df.to_dict("records"),

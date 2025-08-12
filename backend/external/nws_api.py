@@ -2,7 +2,7 @@ import httpx
 from datetime import date
 
 
-async def get_weather_data(coords: dict[str, float], job_date: date) -> dict:
+async def get_weather_data(coords: dict[str, float], job_date: str) -> dict:
     url = f"https://api.weather.gov/points/{coords['lat']},{coords['lon']}"
     headers = {"User-Agent": "AutoJHA", "Accept": "application/geo+json"}
     async with httpx.AsyncClient(headers=headers) as client:
@@ -35,7 +35,7 @@ async def get_alerts(zone: str, client: httpx.AsyncClient) -> list[dict]:
 
 
 async def get_forecast(
-    url: str, job_date: date, client: httpx.AsyncClient
+    url: str, job_date: str, client: httpx.AsyncClient
 ) -> list[str]:
     response = await client.get(url, timeout=15.0)
     response.raise_for_status()
@@ -44,6 +44,6 @@ async def get_forecast(
     forecasts = [
         period["detailedForecast"]
         for period in periods
-        if job_date.strftime("%Y-%m-%d") in period["startTime"]
+        if job_date in period["startTime"]
     ]
     return forecasts
