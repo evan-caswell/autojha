@@ -129,7 +129,7 @@ The app will be available at:
 - [ ] Implement caching for geocode & weather data
 - [ ] Add PDF export for generated JHAs
 - [ ] Persist & view saved JHAs in a database
-- [ ] Improve prompt structure for more consistent AI output
+- [X] Improve prompt structure for more consistent AI output
 
 ---
 
