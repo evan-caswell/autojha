@@ -1,6 +1,8 @@
 import httpx
 import pandas as pd
 import streamlit as st
+from typing import Any
+from utils import render_jha_md
 
 API_URL = "http://localhost:8000/jha/generate"
 
@@ -58,13 +60,11 @@ if not st.session_state.task_df.empty:
     )
 
 
-# Long timeout as the free tier Gemini can sometimes take awhile to respond.
-def send_request(payload: dict) -> str:
-    with httpx.Client(timeout=500.0) as client:
+def send_request(payload: dict) -> dict[str, Any]:
+    with httpx.Client(timeout=30.0) as client:
         response = client.post(API_URL, json=payload)
         response.raise_for_status()
-        # Newline characters in the response are actually "\" + "n" instead of "\n"
-        return response.text.replace("\\n", "\n")
+        return response.json()
 
 
 st.divider()
@@ -75,14 +75,14 @@ if st.button(
         try:
             payload = {
                 "job_name": job_name,
-                "job_date": jha_date.isoformat(),
+                "job_date": jha_date.strftime("%Y-%m-%d"),
                 "job_location": jha_location,
                 "site_conditions": jha_conditions,
                 "tasks": st.session_state.task_df.to_dict("records"),
             }
             result = send_request(payload)
             st.success("Complete!")
-            # Extra quotations are sent back to the frontend in the response text
-            st.markdown(result.strip('"'), unsafe_allow_html=True)
+            md = render_jha_md(result)
+            st.markdown(md)
         except Exception as e:
             st.warning(f"Error {e}")
