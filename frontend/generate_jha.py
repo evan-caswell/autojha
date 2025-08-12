@@ -58,13 +58,11 @@ if not st.session_state.task_df.empty:
     )
 
 
-# Long timeout as the free tier Gemini can sometimes take awhile to respond.
 def send_request(payload: dict) -> str:
-    with httpx.Client(timeout=500.0) as client:
+    with httpx.Client(timeout=30.0) as client:
         response = client.post(API_URL, json=payload)
         response.raise_for_status()
-        # Newline characters in the response are actually "\" + "n" instead of "\n"
-        return response.text.replace("\\n", "\n")
+        return response.json()
 
 
 st.divider()
@@ -83,6 +81,6 @@ if st.button(
             result = send_request(payload)
             st.success("Complete!")
             # Extra quotations are sent back to the frontend in the response text
-            st.markdown(result.strip('"'), unsafe_allow_html=True)
+            st.json(result)
         except Exception as e:
             st.warning(f"Error {e}")
