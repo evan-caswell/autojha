@@ -1,6 +1,8 @@
 import httpx
 import pandas as pd
 import streamlit as st
+from typing import Any
+from utils import render_jha_md
 
 API_URL = "http://localhost:8000/jha/generate"
 
@@ -58,7 +60,7 @@ if not st.session_state.task_df.empty:
     )
 
 
-def send_request(payload: dict) -> str:
+def send_request(payload: dict) -> dict[str, Any]:
     with httpx.Client(timeout=30.0) as client:
         response = client.post(API_URL, json=payload)
         response.raise_for_status()
@@ -80,7 +82,7 @@ if st.button(
             }
             result = send_request(payload)
             st.success("Complete!")
-            # Extra quotations are sent back to the frontend in the response text
-            st.json(result)
+            md = render_jha_md(result)
+            st.markdown(md)
         except Exception as e:
             st.warning(f"Error {e}")

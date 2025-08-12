@@ -31,5 +31,3 @@ class JHA(BaseModel):
     site_control_measures: list[str]
     site_ppe: list[str]
     jha_tasks: list[JHATask]
-
-
